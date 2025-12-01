@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pinkpiestore - บริการแอพพรีเมี่ยม</title>
+
+    <style>
+      /* เพิ่ม Keyframes สำหรับการกระพริบ (Blinking) */
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      /* --- Global Styles: SWEET PINK THEME --- */
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #fff0f5; /* พื้นหลังสีชมพูอ่อนมาก (Lavender Blush) */
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+
+      /* Global Layout & Components */
+      .page-container {
+        max-width: 900px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 15px;
+        box-shadow: 0 6px 20px rgba(255, 105, 180, 0.2);
+        position: relative;
+      }
+
+      /* ส่วนหัวของร้านค้า (Store Header) */
+      .store-header {
+        text-align: center; /* จัดให้อยู่ตรงกลาง */
+        padding: 10px 0;
+      }
+      .landing-page h1 {
+        color: #ff69b4; /* ชื่อร้านสีชมพูเข้ม */
+        border-bottom: 2px solid #ffc0cb;
+        padding-bottom: 10px;
+        display: inline-block;
+      }
+
+      /* สไตล์สำหรับข้อความสีชมพูเข้มที่อยู่หัวข้อ (ไม่กระพริบ) */
+      .dark-pink-text {
+        color: #ff69b4 !important; /* Hot Pink */
+        font-weight: 600;
+      }
+
+      /* สไตล์สำหรับข้อความเตือนที่เป็นสีแดง */
+      .warning-red {
+        color: #dc3545 !important; /* สีแดงเข้ม */
+        font-weight: 600;
+      }
+
+      /* --- CSS สำหรับสถานะร้านค้า --- */
+      .shop-status {
+        padding: 8px 15px;
+        margin-top: 15px;
+        border-radius: 20px;
+        font-weight: 700;
+        font-size: 1.1em;
+        display: inline-block;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .status-open {
+        background-color: #90ee90; /* Light Green */
+        color: #008000; /* Green Dark */
+      }
+      .status-closed {
+        background-color: #f8d7da; /* Light Red */
+        color: #dc3545; /* Crimson Red */
+      }
+      /* --- สิ้นสุด CSS สำหรับสถานะร้านค้า --- */
+
+      /* ปรับ ul info-list ให้อยู่ตรงกลางและเพิ่มระยะห่าง */
+      .info-list {
+        list-style: none; /* ลบจุด */
+        padding: 0;
+        margin-top: 15px;
+        text-align: center; /* จัดเนื้อหาตรงกลาง */
+      }
+
+      .info-list li {
+        padding: 5px 0;
+        margin: auto;
+        max-width: 90%;
+        line-height: 1.4;
+      }
+
+      /* App Grid - ปรับขนาด */
+      .app-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 10px;
+        margin-top: 25px;
+      }
+
+      /* --- ปุ่มสินค้าแต่ละแอพ (App Box) - พื้นหลังชมพูเข้มโทนเดียว, ตัวหนังสือขาว, ปรับขนาด --- */
+      .app-box {
+        padding: 10px;
+        border-radius: 8px;
+        min-height: 60px;
+
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        background-color: #ff69b4 !important; /* บังคับเป็น Hot Pink ทุกปุ่ม */
+
+        box-shadow: 0 4px 8px rgba(255, 105, 180, 0.2);
+        border: none;
+
+        position: relative;
+        text-decoration: none;
+      }
+
+      .app-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(255, 105, 180, 0.5);
+      }
+
+      /* ทำให้ป้าย HOT/NEW กระพริบ และแสดงผลอีกครั้ง */
+      .app-box .status-label {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background-color: var(--status-color);
+        color: white;
+        padding: 2px 8px;
+        border-radius: 0 8px 0 8px;
+        font-weight: bold;
+        font-size: 0.8em;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        animation: blink 1s infinite alternate;
+      }
+
+      .app-title {
+        font-weight: 700;
+        font-size: 1em;
+        line-height: 1.2;
+        color: white;
+        margin: 0;
+      }
+      /* --- สิ้นสุดการแก้ไข App Box --- */
+
+      /* --- App Detail Template Shared Styles --- */
+      .app-page-detail {
+        max-width: 450px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        min-height: 100vh;
+        padding-bottom: 100px;
+      }
+      .header-section {
+        padding: 15px;
+        border-bottom: 1px solid #ffc0cb;
+        text-align: center;
+        position: relative;
+        z-index: 10;
+
+        background-color: white !important;
+        color: #333 !important;
+      }
+      .header-section h1 {
+        color: #ff69b4; /* ชื่อแอปใน Detail Page เป็นชมพูเข้ม */
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      .back-btn {
+        position: absolute;
+        left: 15px;
+        top: 18px;
+        text-decoration: none;
+        color: #ff69b4; /* ปุ่มย้อนกลับเป็นชมพูเข้ม */
+        font-weight: bold;
+        font-size: 0.9em;
+      }
+
+      /* Disclaimer มีกรอบแดงเข้ม ไม่กระพริบ */
+      .full-disclaimer.highlight-pink-border {
+        border: 2px solid #dc3545 !important; /* กรอบแดงเข้ม */
+        animation: none; /* ลบ animation กระพริบออก */
+
+        padding: 15px;
+        border-radius: 8px;
+        white-space: pre-wrap;
+        text-align: left;
+        font-size: 0.9em;
+        color: #333;
+        line-height: 1.4;
+        margin: 15px 0;
+        background-color: #fff0f5;
+      }
+
+      .option-list-wrapper {
+        padding: 20px;
+      }
+
+      .pricing-options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .pricing-options h3 {
+        color: #ff69b4; /* หัวข้อแพ็กเกจเป็นชมพูเข้ม */
+        border-bottom: 2px solid #ffc0cb;
+        padding-top: 15px;
+      }
+
+      .hidden-radio {
+        display: none;
+      }
+
+      .pricing-option-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: white;
+        color: #333;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      /* ใช้สีชมพูเข้ม (#FF69B4) เป็น Brand Color หลักใน Detail Page */
+      input[type="radio"]:checked + .pricing-option-box {
+        border: 3px solid #ff69b4;
+        background-color: #fff0f5;
+      }
+
+      .price-tag {
+        font-size: 1.5em;
+        font-weight: 900;
+        color: #ff69b4; /* ราคาเป็นชมพูเข้ม */
+        white-space: nowrap;
+      }
+      .duration-account {
+        font-weight: 600;
+      }
+
+      .action-panel {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 450px;
+        background: white;
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.1);
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        z-index: 100;
+      }
+
+      /* UX Confirmation Color */
+      .action-success {
+        background-color: #28a745 !important; /* Green */
+        color: white !important;
+      }
+
+      .nav-panel {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 20px 0;
+      }
+      .nav-btn {
+        flex: 1;
+        padding: 8px 10px;
+        font-size: 0.9em;
+        text-align: center;
+        text-decoration: none;
+        background-color: #f0f0f0;
+        color: #555;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        margin: 0 5px;
+        cursor: pointer;
+        font-weight: bold;
+      }
+      .nav-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .action-btn {
+        flex: 1;
+        padding: 12px 15px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1em;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      .action-btn:disabled {
+        background-color: #eee !important;
+        color: #aaa !important;
+        cursor: not-allowed;
+      }
+
+      .copy-btn {
+        background-color: #f0e68c; /* Khaki/Yellow for Copy */
+        color: #555;
+      }
+      .cart-add-btn {
+        background-color: #ff69b4; /* ปุ่มตะกร้าเป็นชมพูเข้ม */
+        color: white;
+      }
+
+      /* --- Cart Page Styles --- */
+      .cart-page-content {
+        max-width: 600px;
+      }
+      .cart-page-content .header-section {
+        background-color: #ff69b4 !important; /* Header ตะกร้าเป็นชมพูเข้ม */
+        color: white !important;
+      }
+      .cart-page-content h1 {
+        color: white;
+        border-bottom: 2px solid white;
+        display: inline-block;
+      }
+      .cart-list-wrapper {
+        padding: 20px;
+      }
+      .instruction {
+        color: #888;
+        font-size: 0.9em;
+        border-bottom: 1px dashed #ccc;
+        padding-bottom: 10px;
+      }
+      .cart-item-box-wrapper {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+      }
+      .cart-item-details {
+        flex-grow: 1;
+        padding-left: 10px;
+      }
+      .cart-item-price {
+        font-weight: bold;
+        color: #ff69b4;
+      }
+      .summary-box {
+        padding: 15px 20px;
+        border-top: 3px double #ff69b4;
+        text-align: right;
+        font-size: 1.2em;
+      }
+      .summary-box span:first-child {
+        font-weight: 500;
+      }
+      .summary-box #cart-total-display {
+        font-weight: 900;
+        color: #dc3545;
+        margin-left: 10px;
+      }
+      .cart-action-panel {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .confirm-order-btn {
+        background-color: #28a745;
+        color: white;
+        padding: 15px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1.1em;
+        cursor: pointer;
+      }
+      .clear-cart-btn {
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 10px;
+        border: 1px solid #f5c6cb;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      /* Popup Notification (ถูกซ่อนไว้) */
+      #popup-container {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="popup-container"></div>
+    <div id="main-app-container">
+      <div class="loading-state">กำลังโหลดข้อมูล...</div>
+    </div>
+
+    <script>
+      let mainContainer;
+
+      // =================================================================
+      // 1. DATA: ข้อมูล 21 แอพ
+      // =================================================================
+      const ALL_APP_DATA = [
+        {
+          id: "netflix1",
+          name: "NETFLIX 4K ไม่รับเคลม",
+          brandColor: "#FF69B4",
+          brandAccent: "#FFFFFF",
+          disclaimer:
+            "ดูพร้อมกันสูงสุด 4 จอ (หาร 5 คน)\n\n⚠️ เงื่อนไขเคลม:\n• ไม่รับเคลม กรณีบัญชีถูกปิด\n• ร้านดูแลให้ 12 ชม.แรกเท่านั้น\n• หากมีปัญหาในช่วง 12 ชม.แรก จะเคลมให้ 50% ของวันที่เหลือ",
+          pricing: [
+            {
+              duration: "7 วัน",
+              account: "มือถือ/โน้ตบุ๊ก",
+              price: 35,
+              type: "mobile",
+            },
+            {
+              duration: "30 วัน",
+              account: "มือถือ/โน้ตบุ๊ก",
+              price: 105,
+              type: "mobile",
+            },
+            {
+              duration: "7 วัน",
+              account: "ทีวี/โปรเจกเตอร์",
+              price: 60,
+              type: "tv",
+            },
+            {
+              duration: "30 วัน",
+              account: "ทีวี/โปรเจกเตอร์",
+              price: 180,
+              type: "tv",
+            },
+          ],
+        },
+        {
+          id: "netflix2",
+          name: "NETFLIX 4K รับเคลม",
+          brandColor: "#DC143C",
+          brandAccent: "#333333",
+          disclaimer:
+            "ดูพร้อมกันสูงสุด 4 จอ (หาร 5 คน)\n\n✅ รับเคลมจนหมดวัน ตามแพ็กเกจที่ลูกค้าซื้อ",
+          pricing: [
+            {
+              duration: "7 วัน",
+              account: "มือถือ/โน้ตบุ๊ก",
+              price: 55,
+              type: "mobile",
+            },
+            {
+              duration: "30 วัน",
+              account: "มือถือ/โน้ตบุ๊ก",
+              price: 135,
+              type: "mobile",
+            },
+            {
+              duration: "7 วัน",
+              account: "ทีวี/โปรเจกเตอร์",
+              price: 75,
+              type: "tv",
+            },
+            {
+              duration: "30 วัน",
+              account: "ทีวี/โปรเจกเตอร์",
+              price: 195,
+              type: "tv",
+            },
+          ],
+        },
+        {
+          id: "bilibili",
+          name: "Bilibili VIP",
+          brandColor: "#87CEEB",
+          brandAccent: "#333333",
+          disclaimer:
+            "จำนวนผู้ใช้พร้อมกัน:\n• ผ่านแอป: ดูได้ 1 คน\n• ผ่านเว็บไซต์: ดูได้สูงสุด 4 คน",
+          pricing: [
+            {
+              duration: "7 วัน",
+              account: "หาร 4 คน",
+              price: 20,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 5 คน",
+              price: 35,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 4 คน",
+              price: 40,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 3 คน",
+              price: 45,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "ส่วนตัว",
+              price: 110,
+              type: "private",
+            },
+          ],
+        },
+        {
+          id: "youku",
+          name: "Youku VIP",
+          brandColor: "#FFA07A",
+          brandAccent: "#333333",
+          disclaimer:
+            "• ดูพร้อมกันได้สูงสุด 2 คน\n• ไม่รวม ตอนที่ต้องซื้อแยก (ตอนพิเศษ/ล่าสุดแบบจ่ายเพิ่ม)",
+          pricing: [
+            {
+              duration: "7 วัน",
+              account: "หาร 4 คน",
+              price: 25,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 4 คน",
+              price: 40,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 3 คน",
+              price: 45,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 2 คน",
+              price: 50,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "ส่วนตัว",
+              price: 95,
+              type: "private",
+            },
+          ],
+        },
+        {
+          id: "oned",
+          name: "Oned VIP 30 วัน",
+          brandColor: "#DA70D6",
+          brandAccent: "#FFFFFF",
+          disclaimer:
+            "ดูพร้อมกันได้สูงสุด 2 คน\n• แพ็กเกจส่วนตัว: เปิดให้สั่งได้เฉพาะบางวัน, ต้องรอทำ 5–30 นาที (ตามคิว)",
+          pricing: [
+            { duration: "30 วัน", account: "หาร 2", price: 65, type: "share" },
+            {
+              duration: "30 วัน",
+              account: "ส่วนตัว",
+              price: 120,
+              type: "private",
+            },
+          ],
+        },
+        {
+          id: "primevideo",
+          name: "Prime Video",
+          brandColor: "#ADD8E6",
+          brandAccent: "#333333",
+          disclaimer:
+            "• ดูพร้อมกันได้สูงสุด 3 คน แบบ จอส่วนตัว\n• อุปกรณ์ iOS อาจดูเรื่องเดียวกันพร้อมกันไม่ได้",
+          pricing: [
+            {
+              duration: "7 วัน",
+              account: "หาร 4–5 คน",
+              price: 40,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 6 คน",
+              price: 65,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 5 คน",
+              price: 70,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 4 คน",
+              price: 75,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 3 คน",
+              price: 80,
+              type: "share",
+            },
+          ],
+        },
+        {
+          id: "viu",
+          name: "Viu Premium",
+          brandColor: "#FFD700",
+          brandAccent: "#333333",
+          disclaimer:
+            "รับชม VIP ได้สูงสุด 3 เครื่อง (มือถือ/แท็บเล็ต) และ 1 เครื่อง (PC/แล็ปท็อป)",
+          pricing: [
+            {
+              duration: "7 วัน",
+              account: "หาร 4 คน",
+              price: 15,
+              type: "share",
+            },
+            {
+              duration: "7 วัน",
+              account: "ส่วนตัว",
+              price: 35,
+              type: "private",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 4 คน",
+              price: 25,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 3 คน",
+              price: 30,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "จอส่วนตัว",
+              price: 70,
+              type: "private",
+            },
+            {
+              duration: "60 วัน",
+              account: "หาร 4 คน",
+              price: 45,
+              type: "share",
+            },
+            {
+              duration: "60 วัน",
+              account: "จอส่วนตัว",
+              price: 150,
+              type: "private",
+            },
+            {
+              duration: "90 วัน",
+              account: "หาร 4 คน",
+              price: 80,
+              type: "share",
+            },
+            {
+              duration: "90 วัน",
+              account: "จอส่วนตัว",
+              price: 250,
+              type: "private",
+            },
+          ],
+        },
+        {
+          id: "netflix3",
+          name: "Netflix จอเดี่ยว",
+          brandColor: "#FF69B4",
+          brandAccent: "#FFFFFF",
+          disclaimer:
+            "• จอส่วนตัวแยกเฉพาะ ดูได้ทุกอุปกรณ์\n• ใช้ได้ 1 อุปกรณ์ต่อครั้ง (เปิดหลายอุปกรณ์จอจะเต็มทันที)\n\n⚠️ เงื่อนไขเคลม:\n– 7 วัน: เคลมได้ภายใน 4 วันแรก\n– 30 วัน: เคลมได้ภายใน 15 วันแรก",
+          pricing: [
+            {
+              duration: "7 วัน",
+              account: "จอส่วนตัวแยกเฉพาะ",
+              price: 85,
+              type: "private",
+            },
+            {
+              duration: "30 วัน",
+              account: "จอส่วนตัวแยกเฉพาะ",
+              price: 200,
+              type: "private",
+            },
+          ],
+        },
+        {
+          id: "wetv",
+          name: "WeTV VIP",
+          brandColor: "#FFA500",
+          brandAccent: "#333333",
+          disclaimer:
+            "ดูพร้อมกันได้สูงสุด 2 คน\n• ส่วนตัว: ห้ามล็อกอินเกิน 7 อุปกรณ์ตลอดอายุการใช้งาน\n• ไม่รวมตอนที่ต้องซื้อเพิ่มแยกต่างหาก",
+          pricing: [
+            {
+              duration: "7 วัน",
+              account: "หาร 4 คน",
+              price: 15,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 4 คน",
+              price: 25,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 3 คน",
+              price: 35,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 2 คน",
+              price: 50,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "ส่วนตัว",
+              price: 85,
+              type: "private",
+            },
+            {
+              duration: "90 วัน",
+              account: "หาร 5 คน",
+              price: 60,
+              type: "share",
+            },
+            {
+              duration: "90 วัน",
+              account: "หาร 4 คน",
+              price: 65,
+              type: "share",
+            },
+          ],
+        },
+        {
+          id: "hbomax1",
+          name: "HBO MAX Full HD",
+          brandColor: "#333333",
+          brandAccent: "#FFC0CB",
+          disclaimer: "ดูพร้อมกันได้สูงสุด 2 จอต่อบัญชี",
+          pricing: [
+            {
+              duration: "7 วัน",
+              account: "หาร 4 คน",
+              price: 35,
+              type: "share",
+            },
+            {
+              duration: "7 วัน",
+              account: "หาร 2 คน",
+              price: 45,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 4 คน",
+              price: 65,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 2 คน",
+              price: 75,
+              type: "share",
+            },
+          ],
+        },
+        {
+          id: "canva1",
+          name: "Canva Pro ระยะสั้น",
+          brandColor: "#9370DB",
+          brandAccent: "#FFFFFF",
+          disclaimer:
+            "• หากต่ออายุด้วยเมลเดิม ต้องย้ายทีม/ย้ายงานทุกครั้ง\n• เพิ่มฟอนต์ 7 วัน: +8 บาท (แจ้งก่อนโอน) • 15 & 30 วัน: ฟรี",
+          pricing: [
+            {
+              duration: "7 วัน",
+              account: "ใช้เมลลูกค้า",
+              price: 15,
+              type: "customer",
+            },
+            {
+              duration: "7 วัน",
+              account: "ใช้เมลร้าน",
+              price: 20,
+              type: "shop",
+            },
+            {
+              duration: "15 วัน",
+              account: "ใช้เมลลูกค้า",
+              price: 25,
+              type: "customer",
+            },
+            {
+              duration: "15 วัน",
+              account: "ใช้เมลร้าน",
+              price: 30,
+              type: "shop",
+            },
+            {
+              duration: "30 วัน",
+              account: "ใช้เมลลูกค้า",
+              price: 40,
+              type: "customer",
+            },
+            {
+              duration: "30 วัน",
+              account: "ใช้เมลร้าน",
+              price: 45,
+              type: "shop",
+            },
+          ],
+        },
+        {
+          id: "linegift",
+          name: "Line Gift Shop",
+          brandColor: "#00B900",
+          brandAccent: "#333333",
+          disclaimer:
+            "• เหรียญ LINE แท้ 100% • ของขวัญไม่หายและไม่มีวันหมดอายุ\n\nวิธีสั่งซื้อง่าย ๆ: ส่งลิงก์ สติกเกอร์/ธีม/อิโมจิ และส่ง QR Code หรือ ID LINE ของผู้รับ",
+          pricing: [
+            {
+              duration: "50 Coins",
+              account: "เหรียญ LINE",
+              price: 25,
+              type: "item",
+            },
+            {
+              duration: "85 Coins",
+              account: "เหรียญ LINE",
+              price: 45,
+              type: "item",
+            },
+            {
+              duration: "100 Coins",
+              account: "เหรียญ LINE",
+              price: 50,
+              type: "item",
+            },
+            {
+              duration: "150 Coins",
+              account: "เหรียญ LINE",
+              price: 75,
+              type: "item",
+            },
+          ],
+        },
+        {
+          id: "ytprem",
+          name: "Youtube Premium 30 วัน",
+          brandColor: "#FA8072",
+          brandAccent: "#FFFFFF",
+          disclaimer:
+            "• เมลลูกค้า: ตอบรับคำเชิญภายในวันสั่งซื้อ (+10฿ หากดึงใหม่)\n• เมลร้าน (สั้น): เคลมปิด/ยืนยันเบอร์ภายใน 2 วัน\n• เมลร้าน (ตลอด 30 วัน): ดูแลเคลมครบ 30 วันเต็ม",
+          pricing: [
+            {
+              duration: "30 วัน",
+              account: "เมลลูกค้า",
+              price: 20,
+              type: "customer",
+            },
+            {
+              duration: "30 วัน",
+              account: "เมลร้าน ระยะสั้น",
+              price: 25,
+              type: "shop_short",
+            },
+            {
+              duration: "30 วัน",
+              account: "เมลร้าน ตลอด 30 วัน",
+              price: 40,
+              type: "shop_full",
+            },
+          ],
+        },
+        {
+          id: "canva2",
+          name: "Canva Pro แพ็กเหมาจ่าย",
+          brandColor: "#7B68EE",
+          brandAccent: "#333333",
+          disclaimer:
+            "• เหมาะสำหรับผู้ใช้ต่อเนื่องหลายเดือน\n• ใช้เมลลูกค้าเดิมได้เรื่อย ๆ\n• ⚠️ แจ้งก่อนซื้อ: ต้องย้ายงาน/ย้ายทีมทุก 30 วัน, ซื้อแล้วไม่สามารถยกเลิกได้",
+          pricing: [
+            {
+              duration: "1 เดือน",
+              account: "เมลลูกค้า",
+              price: 40,
+              type: "customer",
+            },
+            {
+              duration: "3 เดือน",
+              account: "เมลลูกค้า",
+              price: 110,
+              type: "customer",
+            },
+            {
+              duration: "6 เดือน",
+              account: "เมลลูกค้า",
+              price: 200,
+              type: "customer",
+            },
+            {
+              duration: "1 ปี",
+              account: "เมลลูกค้า",
+              price: 360,
+              type: "customer",
+            },
+          ],
+        },
+        {
+          id: "iqiyi1",
+          name: "Iqiyi VIP",
+          brandColor: "#98FB98",
+          brandAccent: "#333333",
+          disclaimer:
+            "• ดูเนื้อหา VIP Episodes พร้อมกันสูงสุด 2 ผู้ใช้งาน\n• ครอบคลุม ตอนปกติ และ ตอนพิเศษ VIP",
+          pricing: [
+            {
+              duration: "7 วัน",
+              account: "หาร 4 คน",
+              price: 15,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 4 คน",
+              price: 25,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 3 คน",
+              price: 35,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 2 คน",
+              price: 50,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "ส่วนตัว 30 วัน",
+              price: 80,
+              type: "private",
+            },
+          ],
+        },
+        {
+          id: "iqiyi2",
+          name: "Iqiyi Premium",
+          brandColor: "#00CED1",
+          brandAccent: "#333333",
+          disclaimer:
+            "• ดูได้ทั้ง ตอนปกติ, ตอน VIP, และตอนล่วงหน้า\n• รับชมพร้อมกันสูงสุด 4 ผู้ใช้งาน",
+          pricing: [
+            {
+              duration: "30 วัน",
+              account: "หาร 4 คน",
+              price: 55,
+              type: "share",
+            },
+          ],
+        },
+        {
+          id: "gagaoolala",
+          name: "Gagaoolala VIP",
+          brandColor: "#FF69B4",
+          brandAccent: "#333333",
+          disclaimer:
+            "• เพลิดเพลินกับการรับชม 30 วันเต็ม\n• ดูพร้อมกันสูงสุด 4 ผู้ใช้งาน",
+          pricing: [
+            {
+              duration: "30 วัน",
+              account: "หาร 5 คน",
+              price: 55,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 6 คน",
+              price: 50,
+              type: "share",
+            },
+          ],
+        },
+        {
+          id: "trueid",
+          name: "TrueID VIP",
+          brandColor: "#FF6347",
+          brandAccent: "#FFFFFF",
+          disclaimer:
+            "• ดูพร้อมกันสูงสุด 2 คนต่อบัญชี\n• รายการ VIP ไม่มีโฆษณาคั่น\n• ไม่รวม: ถ่ายทอดสดกีฬา และหนังเช่า (Rent)",
+          pricing: [
+            {
+              duration: "7 วัน",
+              account: "หาร 4 คน",
+              price: 20,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 5 คน",
+              price: 35,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 4 คน",
+              price: 40,
+              type: "share",
+            },
+          ],
+        },
+        {
+          id: "ch3",
+          name: "Ch3 Plus VIP",
+          brandColor: "#FF6347",
+          brandAccent: "#FFFFFF",
+          disclaimer:
+            "• ดู VIP พร้อมกันสูงสุด 1 คนต่อบัญชี\n• ⚠️ หมายเหตุสำคัญ: สำหรับแพ็กเกจ หาร 2 หากเกิดปัญหา จอเต็ม ทางร้านไม่รับเคลมทุกกรณี",
+          pricing: [
+            {
+              duration: "30 วัน",
+              account: "หาร 2 คน",
+              price: 60,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "ส่วนตัว",
+              price: 90,
+              type: "private",
+            },
+          ],
+        },
+        {
+          id: "monomax",
+          name: "Monomax VIP 30 วัน",
+          brandColor: "#B0E0E6",
+          brandAccent: "#333333",
+          disclaimer:
+            "• ดู VIP พร้อมกันได้ 1 คนต่อบัญชี\n• ข้อจำกัด: ไม่รวมเนื้อหาซื้อแยก/กีฬา, ห้ามลูกค้าสมัคร/ซื้อแพ็กเกจเอง",
+          pricing: [
+            {
+              duration: "30 วัน",
+              account: "จอส่วนตัว",
+              price: 75,
+              type: "private",
+            },
+            { duration: "30 วัน", account: "จอแชร์", price: 45, type: "share" },
+          ],
+        },
+        {
+          id: "hbomax2",
+          name: "HBO MAX Ultimate",
+          brandColor: "#8B008B",
+          brandAccent: "#FFC0CB",
+          disclaimer: "• ดูพร้อมกันสูงสุด 4 จอต่อบัญชี แบบ จอส่วนตัว",
+          pricing: [
+            {
+              duration: "7 วัน",
+              account: "หาร 5 คน",
+              price: 55,
+              type: "share",
+            },
+            {
+              duration: "7 วัน",
+              account: "หาร 4 คน",
+              price: 60,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 4 คน",
+              price: 100,
+              type: "share",
+            },
+            {
+              duration: "30 วัน",
+              account: "หาร 5 คน",
+              price: 105,
+              type: "share",
+            },
+          ],
+        },
+      ];
+
+      function getAppData(appId) {
+        return PROCESSED_APP_DATA.find((app) => app.id === appId);
+      }
+
+      // =================================================================
+      // *** จัดรูปแบบชื่อ: Title Case และลบคำว่า "วัน/เดือน" ออกจากชื่อหลัก ***
+      // =================================================================
+      const PROCESSED_APP_DATA = ALL_APP_DATA.map((app) => {
+        let cleanedName = app.name;
+
+        // 1. ลบส่วนที่เกี่ยวข้องกับ "วัน" หรือ "เดือน" ในชื่อหลัก (คงไว้สำหรับ Netflix จอเดี่ยว)
+        if (app.id !== "netflix3") {
+          cleanedName = cleanedName
+            .replace(/\s\d+\s(วัน|เดือน)/i, "")
+            .replace(/\s\d+วัน/i, "")
+            .replace(/30 วัน/i, "");
+        }
+
+        // 2. จัดรูปแบบ Title Case และแก้ไขคำพิเศษให้เป็นพิมพ์ใหญ่
+        cleanedName = cleanedName
+          .replace(/[\-:\•\|]/g, " ")
+          .trim()
+          .replace(/\s+/g, " ")
+          .toLowerCase()
+          .split(" ")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ")
+          .replace(/Vip/g, "VIP")
+          .replace(/4k/g, "4K")
+          .replace(/Hd/g, "HD")
+          .replace(/Yt/g, "YT")
+          .replace(/Max/g, "MAX");
+
+        return {
+          ...app,
+          name: cleanedName,
+          disclaimer: app.disclaimer
+            .replace(/[\-:\•\|\+]/g, " ")
+            .trim()
+            .replace(/\s+/g, " "),
+        };
+      }).sort((a, b) => a.name.localeCompare(b.name, "th"));
+      // =================================================================
+
+      // Logic สำหรับป้าย HOT และ NEW
+      function getAppStatus(id) {
+        const hotApps = [
+          "canva1",
+          "iqiyi1",
+          "ytprem",
+          "wetv",
+          "netflix1",
+          "netflix2",
+          "viu",
+        ];
+        const newApps = ["canva2", "netflix3", "iqiyi2"];
+
+        if (hotApps.includes(id)) return { label: "HOT", color: "#dc3545" }; // Red
+        if (newApps.includes(id)) return { label: "NEW", color: "#007bff" }; // Blue
+
+        return null;
+      }
+
+      // =================================================================
+      // 2. Logic สถานะเปิด/ปิดร้าน (09:00 - 01:00)
+      // =================================================================
+      function checkShopStatus() {
+        const now = new Date();
+        const currentHour = now.getHours();
+
+        const OPEN_HOUR = 9;
+        const CLOSE_HOUR = 1; // 01:00 AM (ของวันถัดไป)
+
+        let isOpen = false;
+        let nextChangeTime = new Date(now);
+
+        if (currentHour >= OPEN_HOUR || currentHour < CLOSE_HOUR) {
+          isOpen = true;
+        } else {
+          isOpen = false;
+        }
+
+        if (isOpen) {
+          // ถ้าเปิดอยู่ จะเปลี่ยนสถานะตอน 01:00 น. ของวันถัดไป
+          nextChangeTime.setDate(
+            now.getDate() + (currentHour < CLOSE_HOUR ? 0 : 1)
+          );
+          nextChangeTime.setHours(CLOSE_HOUR, 0, 0, 0);
+        } else {
+          // ถ้าปิดอยู่ จะเปลี่ยนสถานะตอน 09:00 น.
+          nextChangeTime.setDate(
+            now.getDate() + (currentHour >= CLOSE_HOUR ? 1 : 0)
+          ); // ถ้าตอนนี้ 08:xx, วันนี้
+          nextChangeTime.setHours(OPEN_HOUR, 0, 0, 0);
+        }
+
+        const diff = nextChangeTime.getTime() - now.getTime();
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+        let statusText = isOpen ? "🟢 ร้านเปิดแล้ว" : "🔴 ร้านปิดแล้ว";
+
+        if (diff > 0) {
+          const action = isOpen ? "ปิด" : "เปิด";
+          statusText += ` (จะ${action}ในอีก ${hours} ชม. ${minutes} น.)`;
+        }
+
+        return `<div class="shop-status status-${
+          isOpen ? "open" : "closed"
+        }">${statusText}</div>`;
+      }
+
+      // =================================================================
+      // 3. RENDERERS
+      // =================================================================
+
+      function attachLandingPageListeners(searchTerm) {
+        const searchInput = document.getElementById("search-input");
+        if (searchInput) {
+          if (searchTerm) {
+            searchInput.value = searchTerm;
+          }
+
+          searchInput.addEventListener("keyup", (event) => {
+            const newSearchTerm = event.target.value.toLowerCase().trim();
+            renderLandingPage(newSearchTerm);
+          });
+        }
+      }
+
+      function renderLandingPage(searchTerm = "") {
+        const filteredApps = searchTerm
+          ? PROCESSED_APP_DATA.filter((app) =>
+              app.name.toLowerCase().includes(searchTerm)
+            )
+          : PROCESSED_APP_DATA;
+
+        const shopStatusHTML = checkShopStatus();
+
+        let landingHTML = `
+                <div class="page-container landing-page">
+                    <a href="?view=cart" class="cart-link">🛒</a>
+                    <div class="store-header">
+                        <h1>Pinkpiestore</h1>
+                        
+                        <p class="dark-pink-text" style="margin-bottom: 5px;">
+                            ลูกค้ากดตรงราคาที่ลูกค้าเลือก **กดคัดลอกหรือใส่ในตระกล้าได้เลยค่ะ**
+                        </p>
+                        
+                        <p class="dark-pink-text">
+                            บริการแอพพรีเมี่ยมมามากกว่า 21 รายการ (แอพที่ยังไม่มี: Disney+, แอพจีน, แอพแต่งรูป)
+                        </p>
+
+                        <div style="margin-top: 15px;">${shopStatusHTML}</div>
+                        <ul class="info-list">
+                            <li class="warning-red">⚠️ หมายเหตุ: กดสินค้าไว้ในตระกร้า หากกดออกสินค้าจะหายไป (ไม่มีการบันทึก)</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <input type="text" id="search-input" placeholder="🔍 ค้นหาชื่อแอป..." 
+                            style="padding: 10px; width: 80%; max-width: 300px; border: 1px solid #ffc0cb; border-radius: 20px; font-size: 1em;">
+                    </div>
+                    
+                    <div class="app-grid">
+            `;
+
+        const gridHTML = filteredApps
+          .map((app) => {
+            const status = getAppStatus(app.id);
+
+            return `
+                    <a href="?appId=${app.id}" class="app-box">
+                        ${
+                          status
+                            ? `<div class="status-label" style="--status-color: ${status.color}">${status.label}</div>`
+                            : ""
+                        }
+                        <div class="app-title">${app.name}</div>
+                    </a>
+                `;
+          })
+          .join("");
+
+        landingHTML += gridHTML;
+        landingHTML += `
+                    </div>
+                </div>
+            `;
+
+        mainContainer.innerHTML = landingHTML;
+        attachLandingPageListeners(searchTerm);
+
+        // *** สำคัญ: ต้องมีการเรียก renderLandingPage ซ้ำทุกนาทีเพื่ออัปเดตเวลานับถอยหลัง ***
+        setTimeout(() => {
+          const currentSearchTerm =
+            document.getElementById("search-input")?.value || "";
+          renderLandingPage(currentSearchTerm); // เรียกตัวเองซ้ำ
+        }, 60000); // อัปเดตทุก 1 นาที (60,000 มิลลิวินาที)
+      }
+
+      function renderDetailPage(app) {
+        let optionsHTML = "";
+        let currentType = null;
+        let index = 0;
+
+        const styleBlock = `
+                <style>
+                    :root {
+                        --brand-primary: #FF69B4; 
+                        --brand-secondary: #FFC0CB;
+                        --brand-copy: #F0E68C;
+                    }
+                </style>
+            `;
+
+        app.pricing.forEach((option) => {
+          const id = `option-${app.id}-${index++}`;
+
+          // ชื่อเต็มสำหรับคัดลอก (สำคัญ: ต้องรวมชื่อแอปฯ ที่สั้นลงและรายละเอียดแพ็กเกจ)
+          const fullCopyLabel = `${app.name} | ${option.duration} - ${option.account}`;
+
+          // ชื่อที่แสดงในปุ่มตัวเลือก: [ระยะเวลา] [จำนวนหาร] (ตามคำขอ)
+          const displayLabel = `${option.duration} ${option.account}`;
+
+          const priceTagContent = `฿ ${option.price.toLocaleString()}`;
+
+          // Logic สำหรับการจัดหัวข้อกลุ่ม
+          if (option.type !== currentType) {
+            currentType = option.type;
+            const headerText = currentType.includes("mobile")
+              ? "<h3>📱 มือถือ ไอแพด โน้ตบุ๊ก</h3>"
+              : currentType.includes("tv")
+              ? "<h3>📺 ทีวี โปรเจกเตอร์</h3>"
+              : currentType.includes("share")
+              ? "<h3>👥 แพ็กเกจหาร/แชร์</h3>"
+              : currentType.includes("private")
+              ? "<h3>👤 แพ็กเกจส่วนตัว</h3>"
+              : currentType.includes("customer")
+              ? "<h3>อีเมลลูกค้า</h3>"
+              : currentType.includes("shop")
+              ? "<h3>อีเมลร้าน</h3>"
+              : "<h3>📦 ตัวเลือกอื่นๆ</h3>";
+            optionsHTML += headerText;
+          }
+
+          optionsHTML += `
+                    <div>
+                        <input type="radio" id="${id}" name="app-option" class="hidden-radio" 
+                                data-label="${fullCopyLabel}" 
+                                data-price="${option.price}">
+                        <label for="${id}" class="pricing-option-box">
+                            <div class="option-text">
+                                <div class="duration-account">${displayLabel}</div> 
+                            </div>
+                            <div class="price-tag">${priceTagContent}</div> 
+                        </label>
+                    </div>
+                `;
+        });
+
+        // *** เพิ่มปุ่ม Navigation ***
+        const currentIndex = PROCESSED_APP_DATA.findIndex(
+          (a) => a.id === app.id
+        );
+        const prevApp = PROCESSED_APP_DATA[currentIndex - 1];
+        const nextApp = PROCESSED_APP_DATA[currentIndex + 1];
+
+        const navButtons = `
+                <div class="nav-panel">
+                    ${
+                      prevApp
+                        ? `<a href="?appId=${prevApp.id}" class="action-btn nav-btn prev-btn">❮ ก่อนหน้า</a>`
+                        : `<button class="action-btn nav-btn prev-btn" disabled>❮ ก่อนหน้า</button>`
+                    }
+                    ${
+                      nextApp
+                        ? `<a href="?appId=${nextApp.id}" class="action-btn nav-btn next-btn">ถัดไป ❯</a>`
+                        : `<button class="action-btn nav-btn next-btn" disabled>ถัดไป ❯</button>`
+                    }
+                </div>
+            `;
+
+        let detailHTML = `
+                ${styleBlock}
+                <div class="app-page-detail">
+                    ${navButtons} 
+                    <div class="header-section">
+                        <a href="./" class="back-btn">❮ ย้อนกลับ</a> 
+                        <h1>${app.name}</h1>
+                    </div>
+                    
+                    <div class="option-list-wrapper">
+                        <div class="full-disclaimer highlight-pink-border">${app.disclaimer.replace(
+                          /\n/g,
+                          "<br>"
+                        )}</div>
+
+                        <h2>เลือกแพ็กเกจการใช้งาน</h2>
+                        <div class="pricing-options">${optionsHTML}</div>
+                    </div>
+                    
+                    <div class="action-panel">
+                        <button id="copy-selected-btn" class="action-btn copy-btn" disabled>คัดลอกรายละเอียด</button>
+                        <button id="add-to-cart-btn" class="action-btn cart-add-btn" disabled>🛒 ใส่ตะกร้า</button>
+                    </div>
+                </div>
+            `;
+
+        mainContainer.innerHTML = detailHTML;
+        attachDetailListeners(app);
+      }
+
+      function renderCartPage() {
+        const cartItems = getSavedCartItems();
+        let total = 0;
+
+        const listHTML =
+          cartItems
+            .map((item) => {
+              total += item.price;
+              return `
+                            <div class="cart-item-box-wrapper">
+                                <input type="checkbox" id="item-${
+                                  item.id
+                                }" class="cart-checkbox" checked data-id="${
+                item.id
+              }">
+                                <div class="cart-item-details">
+                                    <strong>${item.name}</strong> 
+                                    <button onclick="removeItemFromCart('${
+                                      item.id
+                                    }')" style="background: none; border: none; color: red; cursor: pointer; font-size: 0.9em; margin-left: 10px;">[ลบ]</button>
+                                </div>
+                                <div class="cart-item-price">฿ ${item.price.toLocaleString()}</div>
+                            </div>
+                        `;
+            })
+            .join("") ||
+          '<p style="text-align: center; color: #888; padding: 20px;">ตะกร้าสินค้าว่างเปล่า</p>';
+
+        let cartPageHTML = `
+                <div class="page-container cart-page-content">
+                    <div class="header-section" style="background-color: #FF69B4; color: white;">
+                        <a href="./" class="back-btn" style="color: white;">❮ ย้อนกลับ</a> 
+                        <h1>🛒 ตะกร้าสินค้า</h1>
+                        <p class="subtitle">รายการสั่งซื้อพร้อมคัดลอกไปแชท</p>
+                    </div>
+                    
+                    <div class="cart-list-wrapper">
+                        <p class="instruction">✓ ติ๊กเลือกรายการที่ต้องการรวมยอด</p>
+                        <div id="cart-items-display">${listHTML}</div>
+                    </div>
+                    
+                    <div class="summary-box">
+                        <div>
+                            <span>รวมราคารวม (บาท):</span>
+                            <span id="cart-total-display">฿ ${total.toLocaleString()}</span>
+                        </div>
+                    </div>
+
+                    <div class="cart-action-panel">
+                        <button class="confirm-order-btn" id="confirm-order-btn" onclick="copySelectedItemsForOrder()">ยืนยันคำสั่งซื้อ (คัดลอกทั้งหมด)</button>
+                        <button class="clear-cart-btn" onclick="clearCart()">ล้างตะกร้าทั้งหมด</button>
+                    </div>
+                </div>
+            `;
+        mainContainer.innerHTML = cartPageHTML;
+        attachCartListeners();
+      }
+
+      // =================================================================
+      // 4. LISTENERS & UTILITIES
+      // =================================================================
+
+      function getSavedCartItems() {
+        try {
+          const data = localStorage.getItem("pinkpie_cart");
+          return data ? JSON.parse(data) : [];
+        } catch (e) {
+          console.error("Error reading localStorage:", e);
+          return [];
+        }
+      }
+
+      function saveCartItems(items) {
+        localStorage.setItem("pinkpie_cart", JSON.stringify(items));
+      }
+
+      function attachLandingPageListeners(searchTerm) {
+        const searchInput = document.getElementById("search-input");
+        if (searchInput) {
+          if (searchTerm) {
+            searchInput.value = searchTerm;
+          }
+
+          searchInput.addEventListener("keyup", (event) => {
+            const newSearchTerm = event.target.value.toLowerCase().trim();
+            renderLandingPage(newSearchTerm);
+          });
+        }
+      }
+
+      function attachDetailListeners(app) {
+        const copyBtn = document.getElementById("copy-selected-btn");
+        const cartBtn = document.getElementById("add-to-cart-btn");
+        const radioButtons = document.querySelectorAll(
+          'input[name="app-option"]'
+        );
+        let selectedOption = null;
+
+        radioButtons.forEach((radio) => {
+          radio.addEventListener("change", (event) => {
+            if (event.target.checked) {
+              selectedOption = {
+                label: event.target.getAttribute("data-label"),
+                price: event.target.getAttribute("data-price"),
+              };
+              copyBtn.disabled = false;
+              cartBtn.disabled = false;
+
+              // *** Reset Text ในกรณีที่มีการเลือกใหม่ ***
+              copyBtn.textContent = "คัดลอกรายละเอียด";
+              cartBtn.textContent = "🛒 ใส่ตะกร้า";
+              copyBtn.classList.remove("action-success");
+              cartBtn.classList.remove("action-success");
+            }
+          });
+        });
+
+        copyBtn.addEventListener("click", () => {
+          if (selectedOption) {
+            // *** แก้ไขการคัดลอก: เอาเฉพาะชื่อและราคา ตามที่ลูกค้าระบุ ***
+            const textToCopy = `
+📣 **สนใจสั่งซื้อ**
+----------------------------------------
+✅ **รายการ:** ${selectedOption.label} 
+💰 **ราคา:** ${selectedOption.price.toLocaleString()} บาท
+----------------------------------------
+`;
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+              // *** เพิ่มการเปลี่ยนข้อความปุ่มเพื่อยืนยัน ***
+              copyBtn.textContent = "✅ คัดลอกแล้ว!";
+              copyBtn.classList.add("action-success");
+              setTimeout(() => {
+                copyBtn.textContent = "คัดลอกรายละเอียด";
+                copyBtn.classList.remove("action-success");
+              }, 1500);
+            });
+          }
+        });
+
+        // Logic ปุ่มใส่ตะกร้า
+        cartBtn.addEventListener("click", () => {
+          if (selectedOption) {
+            addToCart(selectedOption);
+            // *** เพิ่มการเปลี่ยนข้อความปุ่มเพื่อยืนยัน ***
+            cartBtn.textContent = "🛒 เพิ่มแล้ว!";
+            cartBtn.classList.add("action-success");
+            setTimeout(() => {
+              cartBtn.textContent = "🛒 ใส่ตะกร้า";
+              cartBtn.classList.remove("action-success");
+            }, 1500);
+          }
+        });
+      }
+
+      function addToCart(selectedItem) {
+        let items = getSavedCartItems();
+        const newId =
+          Date.now().toString(36) + Math.random().toString(36).substr(2);
+        items.push({
+          id: newId,
+          name: selectedItem.label,
+          price: parseFloat(selectedItem.price),
+        });
+        saveCartItems(items);
+      }
+
+      function clearCart() {
+        if (confirm("คุณแน่ใจหรือไม่ว่าต้องการล้างตะกร้าสินค้าทั้งหมด?")) {
+          saveCartItems([]);
+          renderCartPage();
+        }
+      }
+
+      function removeItemFromCart(itemId) {
+        let items = getSavedCartItems();
+        items = items.filter((item) => item.id !== itemId);
+        saveCartItems(items);
+        renderCartPage();
+      }
+
+      function updateCartSummaryDisplay() {
+        let total = 0;
+        const cartItems = getSavedCartItems();
+        const checkedCheckboxes = document.querySelectorAll(
+          ".cart-checkbox:checked"
+        );
+
+        checkedCheckboxes.forEach((checkbox) => {
+          const itemId = checkbox.getAttribute("data-id");
+          const item = cartItems.find((i) => i.id === itemId);
+          if (item) {
+            total += item.price;
+          }
+        });
+
+        const totalDisplay = document.getElementById("cart-total-display");
+        if (totalDisplay) {
+          totalDisplay.textContent = `฿ ${total.toLocaleString()}`;
+        }
+      }
+
+      function copySelectedItemsForOrder() {
+        const checkedCheckboxes = document.querySelectorAll(
+          ".cart-checkbox:checked"
+        );
+        const cartItems = getSavedCartItems();
+        let total = 0;
+        let orderList = [];
+
+        checkedCheckboxes.forEach((checkbox) => {
+          const itemId = checkbox.getAttribute("data-id");
+          const item = cartItems.find((i) => i.id === itemId);
+          if (item) {
+            orderList.push(
+              `✅ **รายการ:** ${
+                item.name
+              } \n💰 **ราคา:** ${item.price.toLocaleString()} บาท`
+            );
+            total += item.price;
+          }
+        });
+
+        if (orderList.length === 0) {
+          alert("กรุณาเลือกสินค้าในตะกร้าก่อนทำการคัดลอก");
+          return;
+        }
+
+        const textToCopy = `
+📣 **สรุปคำสั่งซื้อ Pinkpiestore**
+----------------------------------------
+${orderList.join("\n")}
+----------------------------------------
+💰 **ยอดรวมสุทธิ:** ${total.toLocaleString()} บาท
+📌 **หมายเหตุ:** รอรับการแจ้งโอน/รายละเอียดการจัดส่งจากร้าน
+`.trim();
+
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          alert(
+            `คัดลอกรายการสั่งซื้อจำนวน ${
+              checkedCheckboxes.length
+            } รายการ และราคารวม: ${total.toLocaleString()} บาท เรียบร้อยแล้ว!`
+          );
+        });
+      }
+
+      function attachCartListeners() {
+        const cartCheckboxes = document.querySelectorAll(".cart-checkbox");
+        cartCheckboxes.forEach((checkbox) => {
+          checkbox.addEventListener("change", updateCartSummaryDisplay);
+        });
+        updateCartSummaryDisplay();
+
+        // ทำให้ฟังก์ชันลบทำงาน
+        window.removeItemFromCart = removeItemFromCart;
+        window.clearCart = clearCart;
+        window.copySelectedItemsForOrder = copySelectedItemsForOrder;
+      }
+
+      // 6. ROUTER (The Final Run)
+      function router() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const appId = urlParams.get("appId");
+        const view = urlParams.get("view");
+
+        if (view === "cart") {
+          renderCartPage();
+        } else if (appId) {
+          const appDetails = getAppData(appId);
+          if (appDetails) {
+            renderDetailPage(appDetails);
+          } else {
+            renderLandingPage();
+          }
+        } else {
+          renderLandingPage();
+        }
+      }
+
+      // *** การเรียกใช้ที่แก้ไขแล้ว: ใช้ DOMContentLoaded เพื่อให้แน่ใจว่า mainContainer มีอยู่ ***
+      document.addEventListener("DOMContentLoaded", () => {
+        mainContainer = document.getElementById("main-app-container");
+        if (mainContainer) {
+          router();
+        } else {
+          console.error("Error: main-app-container not found.");
+        }
+      });
+      window.addEventListener("popstate", router);
+    </script>
+  </body>
+</html>
